@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:social_media/manage/controller/home_controller.dart';
+import 'package:social_media/manage/controller/login_controller.dart';
 
-class HomeBinding implements Bindings {
+class LoginBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put(HomeController());
+    Get.lazyPut(() => LoginController());
   }
 }
