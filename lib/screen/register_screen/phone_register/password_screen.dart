@@ -1,20 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/util/const.dart';
 import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/widgets/button.dart';
 import 'package:social_media/widgets/input_widget.dart';
 
-class PasswordScreen extends GetView<RegisterController> {
+class PasswordScreen extends StatelessWidget {
   const PasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<RegisterController>();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

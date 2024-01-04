@@ -7,12 +7,14 @@ import 'package:social_media/repository/user_repo.dart';
 
 class LoginController extends GetxController with StateMixin {
   RxBool showPass = true.obs;
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passWordController = TextEditingController();
+  late TextEditingController userNameController;
+  late TextEditingController passWordController;
 
   @override
   void onInit() {
     change(null, status: RxStatus.loading());
+    userNameController = TextEditingController();
+    passWordController = TextEditingController();
     super.onInit();
   }
 

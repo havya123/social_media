@@ -12,7 +12,5 @@ SizedBox spaceHeight(context, {double height = 0.04}) => SizedBox(
     );
 
 SizedBox spaceWidth(context, {double width = 0.04}) => SizedBox(
-      height: size(context).width * width,
+      width: size(context).width * width,
     );
-
-    

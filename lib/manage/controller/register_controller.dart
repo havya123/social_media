@@ -1,17 +1,15 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
 import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/repository/user_repo.dart';
 
 class RegisterController extends GetxController {
-  TextEditingController phoneNumber = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPassController = TextEditingController();
+  late TextEditingController phoneNumber;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPassController;
 
   RxInt countdown = 30.obs;
   RxBool isCountingDown = false.obs;
@@ -69,7 +67,17 @@ class RegisterController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
+    phoneNumber = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPassController = TextEditingController();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    phoneNumber.dispose();
+    passwordController.dispose();
+    confirmPassController.dispose();
     super.onInit();
   }
 

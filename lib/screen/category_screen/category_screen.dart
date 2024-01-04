@@ -47,6 +47,7 @@ class CategoryScreen extends GetView<CategoryController> {
     ];
 
     return PersistentTabView(
+      navBarStyle: NavBarStyle.style2,
       controller: controller,
       context,
       screens: widgets,

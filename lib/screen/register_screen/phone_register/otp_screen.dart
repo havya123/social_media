@@ -6,11 +6,12 @@ import 'package:social_media/app/util/const.dart';
 import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/widgets/button.dart';
 
-class OTPScreen extends GetView<RegisterController> {
+class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<RegisterController>();
     controller.startCountdown();
     return Scaffold(
       body: SafeArea(

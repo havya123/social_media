@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/util/const.dart';
-import 'package:social_media/widgets/button.dart';
+import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/widgets/register_button.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends GetView<RegisterController> {
   const RegisterScreen({super.key});
 
   @override

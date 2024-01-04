@@ -6,11 +6,12 @@ import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/widgets/button.dart';
 import 'package:social_media/widgets/input_widget.dart';
 
-class PhoneRegisterScreen extends GetView<RegisterController> {
+class PhoneRegisterScreen extends StatelessWidget {
   const PhoneRegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<RegisterController>();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
