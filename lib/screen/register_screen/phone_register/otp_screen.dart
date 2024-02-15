@@ -79,7 +79,6 @@ class OTPScreen extends StatelessWidget {
                           : TextButton(
                               onPressed: () {
                                 controller.resetCountDown();
-                                controller.startCountdown();
                               },
                               child: const Text(
                                 "Send code",
@@ -88,12 +87,10 @@ class OTPScreen extends StatelessWidget {
                     ],
                   ),
                   spaceHeight(context),
-                  ButtonWidget(
-                    function: () {
-                      Get.toNamed(RouteName.passwordRoute);
-                    },
-                    textButton: "Continue",
-                  )
+                  // ButtonWidget(
+                  //   function: () {},
+                  //   textButton: "Continue",
+                  // )
                 ]),
           ),
         ),

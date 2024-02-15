@@ -1,19 +1,33 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
+
 import 'package:social_media/app/route/route_name.dart';
+import 'package:social_media/app/store/app_store.dart';
+import 'package:social_media/app/store/services.dart';
+import 'package:social_media/app/util/key.dart';
+import 'package:social_media/model/user.dart';
 import 'package:social_media/repository/user_repo.dart';
 
 class RegisterController extends GetxController {
+  static RegisterController get to => Get.find<RegisterController>();
+
+  late Rx<User?> user;
+
   late TextEditingController phoneNumber;
-  late TextEditingController passwordController;
-  late TextEditingController confirmPassController;
+
+  bool tokenExpired = true;
 
   RxInt countdown = 30.obs;
+
   RxBool isCountingDown = false.obs;
+
   String verifyID = "";
+
   RxBool isSent = false.obs;
 
   Timer? _timer;
@@ -50,7 +64,14 @@ class RegisterController extends GetxController {
     showPass.value = !showPass.value;
   }
 
+  Future<RegisterController> init() async {
+    phoneNumber = TextEditingController();
+    user = Rx<User?>(await UserRepo().getUser(AppStore.to.uid));
+    return this;
+  }
+
   void startCountdown() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown.value > 0) {
         countdown.value -= 1;
@@ -61,23 +82,13 @@ class RegisterController extends GetxController {
   }
 
   void resetCountDown() {
-    _timer?.cancel();
     countdown.value = 30;
-  }
-
-  @override
-  void onInit() {
-    phoneNumber = TextEditingController();
-    passwordController = TextEditingController();
-    confirmPassController = TextEditingController();
-    super.onInit();
+    startCountdown();
   }
 
   @override
   void onClose() {
     phoneNumber.dispose();
-    passwordController.dispose();
-    confirmPassController.dispose();
     super.onInit();
   }
 
@@ -87,11 +98,37 @@ class RegisterController extends GetxController {
         phoneNumber: "+84${phoneNumber.text}",
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
+          if (e.code == 'invalid-phone-number') {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Center(
+                        child: Text('The provided phone number is not valid')),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text(e.code.toString()),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    ],
+                  );
+                });
+            return;
+          }
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Center(child: Text('Gửi mã OTP thất bại')),
+                  title: const Center(child: Text('Failed to send OTP')),
                   content: SingleChildScrollView(
                     child: ListBody(
                       children: <Widget>[
@@ -116,11 +153,11 @@ class RegisterController extends GetxController {
               builder: (BuildContext context) {
                 isSent.value = true;
                 return AlertDialog(
-                  title: const Center(child: Text('Gửi mã OTP thành công')),
+                  title: const Center(child: Text('OTP Sent Successfully')),
                   content: const SingleChildScrollView(
                     child: ListBody(
                       children: <Widget>[
-                        Text('Mã OTP đã được gửi vào số điện thoại của bạn'),
+                        Text('Your OTP is sent to your phone'),
                       ],
                     ),
                   ),
@@ -129,6 +166,7 @@ class RegisterController extends GetxController {
                       child: const Text('OK'),
                       onPressed: () {
                         Get.back();
+                        Get.toNamed(RouteName.otpRoute);
                       },
                     ),
                   ],
@@ -150,14 +188,14 @@ class RegisterController extends GetxController {
         smsCode: otp,
       );
 
-      // Sign in with the credential
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
+      String uid = userCredential.user!.uid;
+      AppServices.to.setString(MyKey.uid, uid);
+      AppStore.to.uid = uid;
       if (userCredential.user != null) {
-        // SMS code verification is successful
-        Get.toNamed(RouteName.passwordRoute)!
-            .then((value) => Get.back(result: value ?? []));
+        login(phoneNumber.text, uid);
       } else {
         // Verification failed
       }
@@ -190,36 +228,40 @@ class RegisterController extends GetxController {
     }
   }
 
-  Future<void> registerPhone(context) async {
-    if (passwordController.text == confirmPassController.text) {
-      await UserRepo()
-          .register(phoneNumber.text, confirmPassController.text)
-          .then((value) => Get.toNamed(RouteName.loginRoute));
+  Future<void> login(
+    String phone,
+    String uid,
+  ) async {
+    bool exist = await UserRepo().checkPhoneExist(phone);
+    user = Rx<User?>(await UserRepo().getUser(uid));
+    if (exist) {
+      if (user.value?.statusAccount == "new") {
+        Get.toNamed(RouteName.informationRoute);
+      } else {
+        Get.offNamed(RouteName.categoryRoute);
+      }
     } else {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Center(child: Text('Mật khẩu không trùng khớp')),
-            content: const SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Mật khẩu không trùng khớp'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      await UserRepo().register(phone, uid);
+
+      Get.offNamed(RouteName.informationRoute);
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

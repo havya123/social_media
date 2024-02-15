@@ -19,6 +19,6 @@ class AppServices extends GetxController {
 
   String getString(String key) {
     final String result = prefs.getString(key) ?? "";
-    return result;
+    return result.replaceAll('"', '');
   }
 }

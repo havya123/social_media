@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:social_media/app/route/route_name.dart';
-import 'package:social_media/app/store/app_store.dart';
 import 'package:social_media/app/store/services.dart';
 import 'package:social_media/app/util/key.dart';
 

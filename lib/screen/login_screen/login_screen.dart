@@ -1,15 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:social_media/app/route/route_name.dart';
-import 'package:social_media/app/store/services.dart';
 import 'package:social_media/app/util/const.dart';
-import 'package:social_media/manage/controller/login_controller.dart';
-import 'package:social_media/widgets/button.dart';
-import 'package:social_media/widgets/input_widget.dart';
+import 'package:social_media/manage/controller/register_controller.dart';
+import 'package:social_media/widgets/register_button.dart';
 
-class LoginScreen extends GetView<LoginController> {
+class LoginScreen extends GetView<RegisterController> {
   const LoginScreen({super.key});
 
   @override
@@ -42,117 +39,61 @@ class LoginScreen extends GetView<LoginController> {
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           spaceHeight(context),
-                          TextFieldWidget(
-                            hint: "Phone",
-                            removeBorder: true,
-                            controller: controller.userNameController,
-                            type: TextInputType.phone,
-                            numberOfLetter: 10,
+                          const Text(
+                            "LOGIN",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
                           ),
-                          spaceHeight(context),
-                          Obx(
-                            () => TextFieldWidget(
-                              removeBorder: true,
-                              hint: 'Mật khẩu',
-                              isPass1: controller.showPass.value,
-                              isPass: controller.showPass.value,
-                              icon: IconButton(
-                                  onPressed: () {
-                                    controller.hidePass();
-                                  },
-                                  icon: Icon(
-                                    controller.showPass.value
-                                        ? FontAwesomeIcons.eyeSlash
-                                        : FontAwesomeIcons.eye,
-                                    color: Colors.black,
-                                  )),
-                              minLetter: 8,
-                              errorText: "Hãy nhập mật khẩu",
-                              errorPass: "Nhập đủ 8 ký tự",
-                              controller: controller.passWordController,
-                            ),
-                          ),
-                          spaceHeight(context),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                                onPressed: () {},
-                                child: const Text(
-                                  "Forget password?",
-                                  style: TextStyle(color: Colors.blue),
-                                )),
-                          ),
-                          spaceHeight(context),
-                          ButtonWidget(
-                            function: () async {
-                              await controller.login().then((value) {
-                                if (value) {
-                                  controller.showDialog(
-                                    context,
-                                    QuickAlertType.success,
-                                    "Login Success",
-                                    "Login",
-                                    () {
-                                      Get.toNamed(RouteName.categoryRoute);
-                                    },
-                                  );
-
-                                  return;
-                                }
-                                controller.showDialog(
-                                    context,
-                                    QuickAlertType.error,
-                                    "Login Failed",
-                                    "Login",
-                                    () {});
-                                return;
-                              });
+                          spaceHeight(context, height: 0.1),
+                          RegisterButton(
+                            suffixIcon: const Icon(Icons.phone),
+                            function: () {
+                              Get.toNamed(RouteName.phoneRegisterRoute);
                             },
-                            textButton: "Login",
+                            textButton: "Login with Phone",
+                            colorBorder: Colors.grey.shade500,
+                            border: true,
                           ),
                           spaceHeight(context),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: getWidth(context, width: 0.3),
-                                height: 1,
-                                color: Colors.black,
-                              ),
-                              const Text("OR LOGIN BY",
-                                  style: TextStyle(fontSize: 18)),
-                              Container(
-                                width: getWidth(context, width: 0.3),
-                                height: 1,
-                                color: Colors.black,
-                              ),
-                            ],
-                          ),
-                          spaceHeight(context),
-                          GestureDetector(
-                            onTap: () {
+                          RegisterButton(
+                            suffixIcon:
+                                Image.asset("assets/images/Google logo.png"),
+                            function: () {
                               controller.signInWithGoogle();
                             },
-                            child: Center(
-                              child: Image.asset("assets/images/google.png"),
-                            ),
+                            textButton: "Login with Google",
+                            colorBorder: Colors.grey.shade500,
+                            border: true,
                           ),
-                          spaceHeight(context),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text("Don't have an account?"),
-                              TextButton(
-                                  onPressed: () {
-                                    Get.toNamed(RouteName.registerRoute);
-                                  },
-                                  child: const Text(
-                                    "Register now",
-                                    style: TextStyle(color: Colors.blue),
-                                  ))
-                            ],
+                          spaceHeight(context, height: 0.1),
+                          SizedBox(
+                            width: getWidth(context, width: 0.7),
+                            height: getHeight(context, height: 0.1),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text:
+                                    'By creating an account or signing you agree to our ',
+                                style: const TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Terms and Conditions',
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        print("Terms and Conditions clicked!");
+                                      },
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
                           )
                         ],
                       ),

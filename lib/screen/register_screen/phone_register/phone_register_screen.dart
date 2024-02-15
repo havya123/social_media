@@ -69,10 +69,6 @@ class PhoneRegisterScreen extends StatelessWidget {
                     function: () async {
                       if (controller.phoneNumber.value.text.isNotEmpty) {
                         await controller.sentOtp(context);
-                        if (controller.isSent.value) {
-                          Get.toNamed(RouteName.otpRoute);
-                        }
-                        return;
                       }
                     },
                     textButton: "Send OTP",
