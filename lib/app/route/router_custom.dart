@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 import 'package:social_media/manage/bindings/category_bindings.dart';
 import 'package:social_media/app/route/route_name.dart';
+import 'package:social_media/manage/bindings/createPost_bindings.dart';
 import 'package:social_media/manage/bindings/information_bindings.dart';
 import 'package:social_media/manage/bindings/register_bindings.dart';
-import 'package:social_media/manage/bindings/reivew_bindings.dart';
+import 'package:social_media/manage/bindings/review_bindings.dart';
+import 'package:social_media/manage/middleware/category_middleware.dart';
 import 'package:social_media/manage/middleware/login_middleware.dart';
 import 'package:social_media/manage/middleware/review_middleware.dart';
 import 'package:social_media/screen/category_screen/category_screen.dart';
+import 'package:social_media/screen/create_post_screen/create_post_screen.dart';
 import 'package:social_media/screen/information_screen/information_user_screen.dart';
 import 'package:social_media/screen/login_screen/login_screen.dart';
 import 'package:social_media/screen/register_screen/phone_register/otp_screen.dart';
@@ -25,14 +28,14 @@ class RouteManager {
     GetPage(
       name: RouteName.loginRoute,
       page: () => const LoginScreen(),
-      // binding: RegisterBinding(),
+      binding: RegisterBinding(),
       middlewares: [LoginMiddleWare()],
     ),
     GetPage(
-      name: RouteName.categoryRoute,
-      page: () => const CategoryScreen(),
-      binding: CategoryBinding(),
-    ),
+        name: RouteName.categoryRoute,
+        page: () => const CategoryScreen(),
+        binding: CategoryBinding(),
+        middlewares: [CategoryMiddleWare()]),
     GetPage(
       name: RouteName.registerRoute,
       page: () => const RegisterScreen(),
@@ -51,6 +54,11 @@ class RouteManager {
     GetPage(
         name: RouteName.informationRoute,
         page: () => const InformationUser(),
-        binding: InformationBinding())
+        binding: InformationBinding()),
+    GetPage(
+      name: RouteName.createPostRoute,
+      page: () => const CreatePostScreen(),
+      binding: CreatePostBinding(),
+    )
   ];
 }

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:social_media/app/util/const.dart';
 
 class ButtonWidget extends StatelessWidget {
-  const ButtonWidget(
+  ButtonWidget(
       {required this.function,
       super.key,
       this.textButton = "",
@@ -13,13 +13,19 @@ class ButtonWidget extends StatelessWidget {
       ],
       this.textColor = Colors.white,
       this.border = false,
-      this.colorBorder = Colors.red});
+      this.colorBorder = Colors.red,
+      this.width = double.infinity,
+      this.height,
+      this.borderRadius = 20,
+      this.fontSize = 19});
   final VoidCallback function;
   final String textButton;
   final List<Color> listColor;
   final Color textColor;
   final bool border;
   final Color colorBorder;
+  final double width, borderRadius, fontSize;
+  double? height;
   @override
   Widget build(BuildContext context) {
     var isLoading = false.obs;
@@ -33,21 +39,21 @@ class ButtonWidget extends StatelessWidget {
       },
       child: Ink(
         child: Container(
-          width: double.infinity,
-          height: getHeight(context, height: 0.08),
+          width: width,
+          height: height ?? getHeight(context, height: 0.08),
           decoration: BoxDecoration(
               border: border ? Border.all(color: colorBorder) : null,
               gradient: LinearGradient(colors: listColor),
-              borderRadius: BorderRadius.circular(20)),
+              borderRadius: BorderRadius.circular(borderRadius)),
           child: Obx(
             () => Center(
               child: !isLoading.value
                   ? Text(
                       textButton,
-                      style: TextStyle(
-                          color: textColor,
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold),
+                      style: mediumTextStyle(context).copyWith(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     )
                   : const CircularProgressIndicator(),
             ),

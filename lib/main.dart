@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,19 +8,19 @@ import 'package:social_media/app/store/services.dart';
 import 'package:social_media/firebase_options.dart';
 import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/route/router_custom.dart';
-import 'package:social_media/manage/bindings/reivew_bindings.dart';
+import 'package:social_media/manage/bindings/review_bindings.dart';
 import 'package:social_media/manage/controller/register_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // clearData();
   await Get.putAsync(
     () => AppServices().init(),
   );
-
+  await clearData();
   Get.put(AppStore());
-  await Get.putAsync(() => RegisterController().init());
+  Get.put(RegisterController());
+  await Future.delayed(const Duration(seconds: 2), () {});
   runApp(const MyApp());
 }
 

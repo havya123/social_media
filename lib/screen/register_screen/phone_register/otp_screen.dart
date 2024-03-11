@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/util/const.dart';
 import 'package:social_media/manage/controller/register_controller.dart';
-import 'package:social_media/widgets/button.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({super.key});

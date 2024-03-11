@@ -14,11 +14,14 @@ class AppServices extends GetxController {
   }
 
   Future<void> setString(String key, Object value) async {
+    if (value is String) {
+      await prefs.setString(key, value);
+    }
     await prefs.setString(key, jsonEncode(value));
   }
 
   String getString(String key) {
     final String result = prefs.getString(key) ?? "";
-    return result.replaceAll('"', '');
+    return result;
   }
 }

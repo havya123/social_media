@@ -1,22 +1,21 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
-
 import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/store/app_store.dart';
 import 'package:social_media/app/store/services.dart';
 import 'package:social_media/app/util/key.dart';
 import 'package:social_media/model/user.dart';
+import 'package:social_media/repository/device_token_repo.dart';
 import 'package:social_media/repository/user_repo.dart';
 
 class RegisterController extends GetxController {
   static RegisterController get to => Get.find<RegisterController>();
-
-  late Rx<User?> user;
 
   late TextEditingController phoneNumber;
 
@@ -64,10 +63,10 @@ class RegisterController extends GetxController {
     showPass.value = !showPass.value;
   }
 
-  Future<RegisterController> init() async {
+  @override
+  void onInit() async {
     phoneNumber = TextEditingController();
-    user = Rx<User?>(await UserRepo().getUser(AppStore.to.uid));
-    return this;
+    super.onInit();
   }
 
   void startCountdown() {
@@ -192,8 +191,13 @@ class RegisterController extends GetxController {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       String uid = userCredential.user!.uid;
-      AppServices.to.setString(MyKey.uid, uid);
-      AppStore.to.uid = uid;
+      String token = await userCredential.user!.getIdToken() as String;
+      AppServices.to.setString(MyKey.uid, token);
+      String deviceToken =
+          await FirebaseMessaging.instance.getToken() as String;
+      AppServices.to.setString(MyKey.deviceToken, deviceToken);
+      await DeviceTokenRepo().saveDeviceToken(token, uid);
+
       if (userCredential.user != null) {
         login(phoneNumber.text, uid);
       } else {
@@ -233,17 +237,17 @@ class RegisterController extends GetxController {
     String uid,
   ) async {
     bool exist = await UserRepo().checkPhoneExist(phone);
-    user = Rx<User?>(await UserRepo().getUser(uid));
+    User user = await (UserRepo().getUser(uid));
+    AppStore.to.updateUser(user);
+    AppServices.to.setString(MyKey.user, jsonEncode(user));
+    
+    await Future.delayed(const Duration(seconds: 2), () {});
+
     if (exist) {
-      if (user.value?.statusAccount == "new") {
-        Get.toNamed(RouteName.informationRoute);
-      } else {
-        Get.offNamed(RouteName.categoryRoute);
-      }
+      Get.offNamed(RouteName.categoryRoute);
     } else {
       await UserRepo().register(phone, uid);
-
-      Get.offNamed(RouteName.informationRoute);
+      Get.offNamed(RouteName.categoryRoute);
     }
   }
 

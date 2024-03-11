@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Size size(context) => MediaQuery.sizeOf(context);
 
@@ -14,3 +15,18 @@ SizedBox spaceHeight(context, {double height = 0.04}) => SizedBox(
 SizedBox spaceWidth(context, {double width = 0.04}) => SizedBox(
       width: size(context).width * width,
     );
+
+TextStyle smallTextStyle(context,
+        {double size = 16, Color color = Colors.black}) =>
+    GoogleFonts.roboto(
+        fontSize: size, color: color, fontWeight: FontWeight.normal);
+
+TextStyle mediumTextStyle(context,
+        {double size = 21, Color color = Colors.black}) =>
+    GoogleFonts.roboto(
+        fontSize: size, color: color, fontWeight: FontWeight.w400);
+
+TextStyle largeTextStyle(context,
+        {double size = 30, Color color = Colors.black}) =>
+    GoogleFonts.roboto(
+        fontSize: size, color: color, fontWeight: FontWeight.bold);

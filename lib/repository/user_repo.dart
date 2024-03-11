@@ -1,18 +1,24 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:social_media/app/assets/assets.dart';
 import 'package:social_media/manage/firebase_service/firebase_service.dart';
 import 'package:social_media/model/user.dart';
+import 'package:social_media/model/user_token.dart';
 
 class UserRepo {
   Future<void> register(String phone, String uid) async {
     await FirebaseService.userRef.doc().set(User(
-        phone: phone,
-        uid: uid,
-        username: "",
-        dob: "",
-        avatar: "",
-        email: "",
-        statusAccount: "new"));
+          phone: phone,
+          uid: uid,
+          username: "",
+          dob: "",
+          avatar: AssetsName.defaultAvatar,
+          email: "",
+          statusAccount: "new",
+          listPost: [],
+          friends: [],
+        ));
   }
 
   Future<bool> checkPhoneExist(String phone) async {
@@ -27,17 +33,25 @@ class UserRepo {
     return false;
   }
 
-  Future<User?> getUser(String uid) async {
-    User? user = await FirebaseService.userRef
-        .where('uid', isEqualTo: uid)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        return value.docs.first.data();
-      }
-      return null;
-    });
-    return user;
+  // Stream<User?> getUser(String uid) {
+  //   return FirebaseService.userRef
+  //       .where('uid', isEqualTo: uid)
+  //       .snapshots()
+  //       .map((event) {
+  //     if (event.docs.isNotEmpty) {
+  //       return event.docs.first.data();
+  //     } else {
+  //       return null;
+  //     }
+  //   });
+  // }
+
+  Future<User> getUser(String uid) async {
+    var response =
+        await FirebaseService.userRef.where('uid', isEqualTo: uid).get();
+
+  return response.docs.first.data();
+
   }
 
   Future<void> uploadImg(String userUID, File file) async {
@@ -95,17 +109,6 @@ class UserRepo {
           .update({'email': newEmail});
     }
   }
-
-  // Future<String> checkStatusAccount(String uid) async {
-  //   String status = "";
-  //   var response =
-  //       await FirebaseService.userRef.where('uid', isEqualTo: uid).get();
-  //   if (response.docs.isNotEmpty) {
-  //     status = response.docs.first.data().statusAccount;
-  //   }
-
-  //   return status;
-  // }
 
   Future<void> updateStatusAccount(String uid) async {
     await FirebaseService.userRef

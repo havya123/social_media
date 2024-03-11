@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:social_media/app/store/app_store.dart';
 import 'package:social_media/app/util/const.dart';
 import 'package:social_media/manage/controller/information_controller.dart';
@@ -52,7 +53,8 @@ class AvatarSelected extends GetView<InformationController> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      await controller.updateImage(AppStore.to.uid);
+                      await controller.updateImage(
+                          JwtDecoder.decode(AppStore.to.token)['user_id']);
                       Get.back();
                     },
                     child: const Text("Lưu"),

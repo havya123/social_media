@@ -105,6 +105,7 @@ class InforUserScreen extends StatelessWidget {
                   if (formKey.currentState!.validate()) {
                     controller.dob = "$day/$month/$year";
                     await controller.updateInforUser();
+                    await Future.delayed(const Duration(seconds: 2), () {});
                     Get.toNamed(RouteName.categoryRoute);
                   }
                 },

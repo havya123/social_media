@@ -1,11 +1,13 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:social_media/app/store/app_store.dart';
 import 'package:social_media/app/util/const.dart';
 import 'package:social_media/manage/controller/information_controller.dart';
+import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/widgets/avatar_selected_widget.dart';
 import 'package:social_media/widgets/button.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class AvatarScreen extends StatelessWidget {
   const AvatarScreen({super.key});
@@ -33,6 +35,7 @@ class AvatarScreen extends StatelessWidget {
             Container(
               width: 192,
               height: 192,
+              clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 color: const Color(0xffE8E8E8),
@@ -40,26 +43,13 @@ class AvatarScreen extends StatelessWidget {
               child: Stack(
                 children: [
                   Obx(() {
-                    if (controller.imagePath.isNotEmpty) {
-                      return Container(
-                        width: 192,
-                        height: 192,
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: const Color(0xffE8E8E8),
-                        ),
-                        child: Image.file(
-                          File(controller.imagePath.value),
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    } else {
-                      return Image.network(
-                        "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg",
-                        fit: BoxFit.cover,
-                      );
-                    }
+                    return FadeInImage.memoryNetwork(
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: kTransparentImage,
+                      image: AppStore.to.avatar.value,
+                    );
                   }),
                   Positioned(
                       bottom: 20,

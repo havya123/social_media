@@ -7,4 +7,5 @@ class RouteName {
   static const String otpRoute = "/otpRoute";
   static const String passwordRoute = "/passwordRoute";
   static const String informationRoute = "/informationRoute";
+  static const String createPostRoute = "/createPostRoute";
 }

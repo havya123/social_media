@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:social_media/extension/email_valid_extension.dart';
 
 class TextFieldWidget extends StatelessWidget {

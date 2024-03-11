@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:social_media/app/route/route_name.dart';
 import 'package:social_media/app/util/const.dart';
 import 'package:social_media/widgets/input_widget.dart';
+import 'package:social_media/widgets/post_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -50,32 +53,35 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      height: getHeight(context, height: 0.1),
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                offset: Offset(0, 5),
-                                blurRadius: 5,
-                                color: Colors.grey)
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: getWidth(context),
-                          ),
-                          const Icon(
-                            FontAwesomeIcons.pen,
-                            color: Color(0xff699CFF),
-                          ),
-                          SizedBox(
-                            width: getWidth(context),
-                          ),
-                          const Text("Chia sẽ suy nghĩ của bạn...")
-                        ],
+                    GestureDetector(
+                      onTap: () => Get.toNamed(RouteName.createPostRoute),
+                      child: Container(
+                        width: double.infinity,
+                        height: getHeight(context, height: 0.1),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 5),
+                                  blurRadius: 5,
+                                  color: Colors.grey)
+                            ]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: getWidth(context),
+                            ),
+                            const Icon(
+                              FontAwesomeIcons.pen,
+                              color: Color(0xff699CFF),
+                            ),
+                            SizedBox(
+                              width: getWidth(context),
+                            ),
+                            const Text("Chia sẽ suy nghĩ của bạn...")
+                          ],
+                        ),
                       ),
                     ),
                     spaceHeight(context, height: 0.02),
@@ -115,64 +121,7 @@ class HomeScreen extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return Container(
-                            width: double.infinity,
-                            height: getHeight(context, height: 0.55),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color: Colors.grey),
-                                        ),
-                                        SizedBox(
-                                          width: getWidth(context),
-                                        ),
-                                        const Text("User"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                spaceHeight(context),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Colors.yellow),
-                                  ),
-                                ),
-                                const Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 30),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Icon(FontAwesomeIcons.heart),
-                                          Icon(FontAwesomeIcons.message),
-                                          Icon(FontAwesomeIcons.share),
-                                        ],
-                                      ),
-                                    ))
-                              ],
-                            ),
-                          );
+                          return Container();
                         },
                         separatorBuilder: (context, index) {
                           return SizedBox(

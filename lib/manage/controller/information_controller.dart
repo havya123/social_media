@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:social_media/app/store/app_store.dart';
 import 'package:social_media/extension/snackbar.dart';
+import 'package:social_media/manage/controller/register_controller.dart';
 import 'package:social_media/repository/user_repo.dart';
 import 'package:social_media/screen/information_screen/avatar_user.dart';
 import 'package:social_media/screen/information_screen/infor_user.dart';
@@ -64,7 +65,7 @@ class InformationController extends GetxController {
 
   Future<void> updateInforUser() async {
     try {
-      String uid = AppStore.to.uid;
+      String uid = AppStore.to.uid.value;
       await UserRepo().updateName(uid, nameController.text);
       await UserRepo().updateEmail(uid, emailController.text);
       await UserRepo().updateDob(uid, dob);
